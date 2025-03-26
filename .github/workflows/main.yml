@@ -1,9 +1,9 @@
-name: Auto Commit
+name: Ethereum, NEAR, StarkNet, and Axelar Auto Commit
 
 on:
   push:
     branches:
-      - main
+      - master
   schedule:
       - cron: '*/5 * * * *'
   workflow_dispatch: 
@@ -16,7 +16,7 @@ env:
   GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
 
 jobs:
-  script_auto_commit:
+  ethereum_auto_commit:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -32,38 +32,465 @@ jobs:
       - name: Fetch and merge latest changes
         run: |
           git fetch origin
-          git merge --strategy-option=ours --allow-unrelated-histories origin/main || true
+          git merge --strategy-option=ours --allow-unrelated-histories origin/master || true
 
-      - name: Run scripts
+      - name: Run Ethereum script
         run: |
-          SCRIPTS=( 
-            "arbitrum.sh"
-            "axelar.sh"
-            "base.sh"
-            "bsc.sh"
-            "celestia.sh"
-            "cosmos.sh"
-            "ethereum.sh"
-            "evmos.sh"
-            "filecoin.sh"
-            "fuse.sh"
-            "lava.sh"
-            "near.sh"
-            "osmosis.sh"
-            "solana.sh"
-            "stargaze.sh"
-            "starknet.sh"
-          )
-          for script in "${SCRIPTS[@]}"; do
-            chmod +x "$script"
-            ./"$script"
-          done
+          chmod +x ethereum.sh
+          ./ethereum.sh
 
-      - name: Commit changes
+      - name: Commit and push changes
         run: |
           git add -A
-          git commit -m "$(shuf -n1 -e "🔥 Hotfix" "✨ Feature" "🚀 Upgrade" "🛠️ Fix" "🔧 Refactor" "🔍 Investigate" "💡 Improve" "📦 Update" "📈 Optimize" "💬 Comment" | awk '{print $0}')" || true
+          git commit -m "$(shuf -n1 -e "🔥 Hotfix" "✨ Feature" "🚀 Upgrade" "🛠️ Fix" "🔧 Refactor" "🔍 Investigate" "💡 Improve" "📦 Update" "📈 Optimize" "💬 Comment" | awk '{print $0}') Ethereum network" || true
+          git push origin HEAD:master --force
 
-      - name: Push changes
+  near_auto_commit:
+    needs: ethereum_auto_commit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git identity
         run: |
-          git push origin HEAD:main --force
+          git config user.email "$GIT_USER_EMAIL"
+          git config user.name "$GIT_USER_NAME"
+
+      - name: Fetch and merge latest changes
+        run: |
+          git fetch origin
+          git merge --strategy-option=ours --allow-unrelated-histories origin/master || true
+
+      - name: Run NEAR script
+        run: |
+          chmod +x near.sh
+          ./near.sh
+
+      - name: Commit and push changes
+        run: |
+          git add -A
+          git commit -m "$(shuf -n1 -e "🔥 Hotfix" "✨ Feature" "🚀 Upgrade" "🛠️ Fix" "🔧 Refactor" "🔍 Investigate" "💡 Improve" "📦 Update" "📈 Optimize" "💬 Comment" | awk '{print $0}') NEAR network" || true
+          git push origin HEAD:master --force
+
+  starknet_auto_commit:
+    needs: near_auto_commit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git identity
+        run: |
+          git config user.email "$GIT_USER_EMAIL"
+          git config user.name "$GIT_USER_NAME"
+
+      - name: Fetch and merge latest changes
+        run: |
+          git fetch origin
+          git merge --strategy-option=ours --allow-unrelated-histories origin/master || true
+
+      - name: Run StarkNet script
+        run: |
+          chmod +x starknet.sh
+          ./starknet.sh
+
+      - name: Commit and push changes
+        run: |
+          git add -A
+          git commit -m "$(shuf -n1 -e "🔥 Hotfix" "✨ Feature" "🚀 Upgrade" "🛠️ Fix" "🔧 Refactor" "🔍 Investigate" "💡 Improve" "📦 Update" "📈 Optimize" "💬 Comment" | awk '{print $0}') StarkNet network" || true
+          git push origin HEAD:master --force
+
+  axelar_auto_commit:
+    needs: starknet_auto_commit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git identity
+        run: |
+          git config user.email "$GIT_USER_EMAIL"
+          git config user.name "$GIT_USER_NAME"
+
+      - name: Fetch and merge latest changes
+        run: |
+          git fetch origin
+          git merge --strategy-option=ours --allow-unrelated-histories origin/master || true
+
+      - name: Run Axelar script
+        run: |
+          chmod +x axelar.sh
+          ./axelar.sh
+
+      - name: Commit and push changes
+        run: |
+          git add -A
+          git commit -m "$(shuf -n1 -e "🔥 Hotfix" "✨ Feature" "🚀 Upgrade" "🛠️ Fix" "🔧 Refactor" "🔍 Investigate" "💡 Improve" "📦 Update" "📈 Optimize" "💬 Comment" | awk '{print $0}') Axelar network" || true
+          git push origin HEAD:master --force
+
+  arbitrum_auto_commit:
+    needs: axelar_auto_commit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git identity
+        run: |
+          git config user.email "$GIT_USER_EMAIL"
+          git config user.name "$GIT_USER_NAME"
+
+      - name: Fetch and merge latest changes
+        run: |
+          git fetch origin
+          git merge --strategy-option=ours --allow-unrelated-histories origin/master || true
+
+      - name: Run Arbitrum script
+        run: |
+          chmod +x arbitrum.sh
+          ./arbitrum.sh
+
+      - name: Commit and push changes
+        run: |
+          git add -A
+          git commit -m "$(shuf -n1 -e "🔥 Hotfix" "✨ Feature" "🚀 Upgrade" "🛠️ Fix" "🔧 Refactor" "🔍 Investigate" "💡 Improve" "📦 Update" "📈 Optimize" "💬 Comment" | awk '{print $0}') Arbitrum network" || true
+          git push origin HEAD:master --force
+
+  base_auto_commit:
+    needs: arbitrum_auto_commit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git identity
+        run: |
+          git config user.email "$GIT_USER_EMAIL"
+          git config user.name "$GIT_USER_NAME"
+
+      - name: Fetch and merge latest changes
+        run: |
+          git fetch origin
+          git merge --strategy-option=ours --allow-unrelated-histories origin/master || true
+
+      - name: Run Base script
+        run: |
+          chmod +x base.sh
+          ./base.sh
+
+      - name: Commit and push changes
+        run: |
+          git add -A
+          git commit -m "$(shuf -n1 -e "🔥 Hotfix" "✨ Feature" "🚀 Upgrade" "🛠️ Fix" "🔧 Refactor" "🔍 Investigate" "💡 Improve" "📦 Update" "📈 Optimize" "💬 Comment" | awk '{print $0}') Base network" || true
+          git push origin HEAD:master --force
+
+  bsc_auto_commit:
+    needs: base_auto_commit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git identity
+        run: |
+          git config user.email "$GIT_USER_EMAIL"
+          git config user.name "$GIT_USER_NAME"
+
+      - name: Fetch and merge latest changes
+        run: |
+          git fetch origin
+          git merge --strategy-option=ours --allow-unrelated-histories origin/master || true
+
+      - name: Run BSC script
+        run: |
+          chmod +x bsc.sh
+          ./bsc.sh
+
+      - name: Commit and push changes
+        run: |
+          git add -A
+          git commit -m "$(shuf -n1 -e "🔥 Hotfix" "✨ Feature" "🚀 Upgrade" "🛠️ Fix" "🔧 Refactor" "🔍 Investigate" "💡 Improve" "📦 Update" "📈 Optimize" "💬 Comment" | awk '{print $0}') BSC network" || true
+          git push origin HEAD:master --force
+
+  celestia_auto_commit:
+    needs: bsc_auto_commit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git identity
+        run: |
+          git config user.email "$GIT_USER_EMAIL"
+          git config user.name "$GIT_USER_NAME"
+
+      - name: Fetch and merge latest changes
+        run: |
+          git fetch origin
+          git merge --strategy-option=ours --allow-unrelated-histories origin/master || true
+
+      - name: Run Celestia script
+        run: |
+          chmod +x celestia.sh
+          ./celestia.sh
+
+      - name: Commit and push changes
+        run: |
+          git add -A
+          git commit -m "$(shuf -n1 -e "🔥 Hotfix" "✨ Feature" "🚀 Upgrade" "🛠️ Fix" "🔧 Refactor" "🔍 Investigate" "💡 Improve" "📦 Update" "📈 Optimize" "💬 Comment" | awk '{print $0}') Celestia network" || true
+          git push origin HEAD:master --force
+
+  cosmos_auto_commit:
+    needs: celestia_auto_commit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git identity
+        run: |
+          git config user.email "$GIT_USER_EMAIL"
+          git config user.name "$GIT_USER_NAME"
+
+      - name: Fetch and merge latest changes
+        run: |
+          git fetch origin
+          git merge --strategy-option=ours --allow-unrelated-histories origin/master || true
+
+      - name: Run Cosmos script
+        run: |
+          chmod +x cosmos.sh
+          ./cosmos.sh
+
+      - name: Commit and push changes
+        run: |
+          git add -A
+          git commit -m "$(shuf -n1 -e "🔥 Hotfix" "✨ Feature" "🚀 Upgrade" "🛠️ Fix" "🔧 Refactor" "🔍 Investigate" "💡 Improve" "📦 Update" "📈 Optimize" "💬 Comment" | awk '{print $0}') Cosmos network" || true
+          git push origin HEAD:master --force
+
+  evmos_auto_commit:
+    needs: cosmos_auto_commit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git identity
+        run: |
+          git config user.email "$GIT_USER_EMAIL"
+          git config user.name "$GIT_USER_NAME"
+
+      - name: Fetch and merge latest changes
+        run: |
+          git fetch origin
+          git merge --strategy-option=ours --allow-unrelated-histories origin/master || true
+
+      - name: Run Evmos script
+        run: |
+          chmod +x evmos.sh
+          ./evmos.sh
+
+      - name: Commit and push changes
+        run: |
+          git add -A
+          git commit -m "$(shuf -n1 -e "🔥 Hotfix" "✨ Feature" "🚀 Upgrade" "🛠️ Fix" "🔧 Refactor" "🔍 Investigate" "💡 Improve" "📦 Update" "📈 Optimize" "💬 Comment" | awk '{print $0}') Evmos network" || true
+          git push origin HEAD:master --force
+
+  filecoin_auto_commit:
+    needs: evmos_auto_commit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git identity
+        run: |
+          git config user.email "$GIT_USER_EMAIL"
+          git config user.name "$GIT_USER_NAME"
+
+      - name: Fetch and merge latest changes
+        run: |
+          git fetch origin
+          git merge --strategy-option=ours --allow-unrelated-histories origin/master || true
+
+      - name: Run Filecoin script
+        run: |
+          chmod +x filecoin.sh
+          ./filecoin.sh
+
+      - name: Commit and push changes
+        run: |
+          git add -A
+          git commit -m "$(shuf -n1 -e "🔥 Hotfix" "✨ Feature" "🚀 Upgrade" "🛠️ Fix" "🔧 Refactor" "🔍 Investigate" "💡 Improve" "📦 Update" "📈 Optimize" "💬 Comment" | awk '{print $0}') Filecoin network" || true
+          git push origin HEAD:master --force
+
+  fuse_auto_commit:
+    needs: filecoin_auto_commit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git identity
+        run: |
+          git config user.email "$GIT_USER_EMAIL"
+          git config user.name "$GIT_USER_NAME"
+
+      - name: Fetch and merge latest changes
+        run: |
+          git fetch origin
+          git merge --strategy-option=ours --allow-unrelated-histories origin/master || true
+
+      - name: Run Fuse script
+        run: |
+          chmod +x fuse.sh
+          ./fuse.sh
+
+      - name: Commit and push changes
+        run: |
+          git add -A
+          git commit -m "$(shuf -n1 -e "🔥 Hotfix" "✨ Feature" "🚀 Upgrade" "🛠️ Fix" "🔧 Refactor" "🔍 Investigate" "💡 Improve" "📦 Update" "📈 Optimize" "💬 Comment" | awk '{print $0}') Fuse network" || true
+          git push origin HEAD:master --force
+
+  lava_auto_commit:
+    needs: fuse_auto_commit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git identity
+        run: |
+          git config user.email "$GIT_USER_EMAIL"
+          git config user.name "$GIT_USER_NAME"
+
+      - name: Fetch and merge latest changes
+        run: |
+          git fetch origin
+          git merge --strategy-option=ours --allow-unrelated-histories origin/master || true
+
+      - name: Run Lava script
+        run: |
+          chmod +x lava.sh
+          ./lava.sh
+
+      - name: Commit and push changes
+        run: |
+          git add -A
+          git commit -m "$(shuf -n1 -e "🔥 Hotfix" "✨ Feature" "🚀 Upgrade" "🛠️ Fix" "🔧 Refactor" "🔍 Investigate" "💡 Improve" "📦 Update" "📈 Optimize" "💬 Comment" | awk '{print $0}') Lava network" || true
+          git push origin HEAD:master --force
+
+  osmosis_auto_commit:
+    needs: lava_auto_commit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git identity
+        run: |
+          git config user.email "$GIT_USER_EMAIL"
+          git config user.name "$GIT_USER_NAME"
+
+      - name: Fetch and merge latest changes
+        run: |
+          git fetch origin
+          git merge --strategy-option=ours --allow-unrelated-histories origin/master || true
+
+      - name: Run Osmosis script
+        run: |
+          chmod +x osmosis.sh
+          ./osmosis.sh
+
+      - name: Commit and push changes
+        run: |
+          git add -A
+          git commit -m "$(shuf -n1 -e "🔥 Hotfix" "✨ Feature" "🚀 Upgrade" "🛠️ Fix" "🔧 Refactor" "🔍 Investigate" "💡 Improve" "📦 Update" "📈 Optimize" "💬 Comment" | awk '{print $0}') Osmosis network" || true
+          git push origin HEAD:master --force
+
+  solana_auto_commit:
+    needs: osmosis_auto_commit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git identity
+        run: |
+          git config user.email "$GIT_USER_EMAIL"
+          git config user.name "$GIT_USER_NAME"
+
+      - name: Fetch and merge latest changes
+        run: |
+          git fetch origin
+          git merge --strategy-option=ours --allow-unrelated-histories origin/master || true
+
+      - name: Run Solana script
+        run: |
+          chmod +x solana.sh
+          ./solana.sh
+
+      - name: Commit and push changes
+        run: |
+          git add -A
+          git commit -m "$(shuf -n1 -e "🔥 Hotfix" "✨ Feature" "🚀 Upgrade" "🛠️ Fix" "🔧 Refactor" "🔍 Investigate" "💡 Improve" "📦 Update" "📈 Optimize" "💬 Comment" | awk '{print $0}') Solana network" || true
+          git push origin HEAD:master --force
+
+  stargaze_auto_commit:
+    needs: solana_auto_commit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git identity
+        run: |
+          git config user.email "$GIT_USER_EMAIL"
+          git config user.name "$GIT_USER_NAME"
+
+      - name: Fetch and merge latest changes
+        run: |
+          git fetch origin
+          git merge --strategy-option=ours --allow-unrelated-histories origin/master || true
+
+      - name: Run Stargaze script
+        run: |
+          chmod +x stargaze.sh
+          ./stargaze.sh
+
+      - name: Commit and push changes
+        run: |
+          git add -A
+          git commit -m "$(shuf -n1 -e "🔥 Hotfix" "✨ Feature" "🚀 Upgrade" "🛠️ Fix" "🔧 Refactor" "🔍 Investigate" "💡 Improve" "📦 Update" "📈 Optimize" "💬 Comment" | awk '{print $0}') Stargaze network" || true
+          git push origin HEAD:master --force
