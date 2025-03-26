@@ -21,14 +21,22 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-      - name: Pull latest changes
+      - name: Configure Git identity
         run: |
-          git pull origin main
+          git config user.email "$GIT_USER_EMAIL"
+          git config user.name "$GIT_USER_NAME"
+
+      - name: Fetch and merge latest changes
+        run: |
+          git fetch origin
+          git merge --strategy-option=ours --allow-unrelated-histories origin/main || true
 
       - name: Run scripts
         run: |
-          SCRIPTS=(
+          SCRIPTS=( 
             "arbitrum.sh"
             "axelar.sh"
             "base.sh"
@@ -51,17 +59,11 @@ jobs:
             ./"$script"
           done
 
-      - name: Configure Git identity
-        run: |
-          git config user.email "$GIT_USER_EMAIL"
-          git config user.name "$GIT_USER_NAME"
-
       - name: Commit changes
         run: |
           git add -A
-          git commit -m "$(shuf -n1 -e "🔥 Hotfix" "✨ Feature" "🚀 Upgrade" "🛠️ Fix" "🔧 Refactor" "🔍 Investigate" "💡 Improve" "📦 Update" "📈 Optimize" "💬 Comment" | awk '{print $0}')"
+          git commit -m "$(shuf -n1 -e "🔥 Hotfix" "✨ Feature" "🚀 Upgrade" "🛠️ Fix" "🔧 Refactor" "🔍 Investigate" "💡 Improve" "📦 Update" "📈 Optimize" "💬 Comment" | awk '{print $0}')" || true
 
-      - name: GitHub Push
-        uses: ad-m/github-push-action@v0.6.0
-        with:
-          github_token: ${{ secrets.GIT_TOKEN }}
+      - name: Push changes
+        run: |
+          git push origin HEAD:main --force
